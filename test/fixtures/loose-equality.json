@@ -1,0 +1,6 @@
+{
+  "name": "loose-equality",
+  "gate": "#!/usr/bin/env bun\nimport fs from 'node:fs';\nimport ts from 'typescript';\n\nconst files = process.argv.slice(2);\nif (!files.length) {\n  console.error('usage: bun gate.mjs <file.ts ...>');\n  process.exit(2);\n}\n\nlet violations = 0;\nconst report = (file, node, sourceFile) => {\n  const { line, character } = sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile));\n  console.log(`✗ loose equality  ${file}:${line + 1}:${character + 1}`);\n  console.log(`    binary expression: ${node.getText(sourceFile).slice(0, 80).replace(/\\s+/g, ' ')}`);\n  violations++;\n};\n\nfor (const file of files) {\n  const source = fs.readFileSync(file, 'utf8');\n  const sourceFile = ts.createSourceFile(file, source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);\n  const visit = (node) => {\n    if (ts.isBinaryExpression(node) && (node.operatorToken.kind === ts.SyntaxKind.EqualsEqualsToken || node.operatorToken.kind === ts.SyntaxKind.ExclamationEqualsToken)) {\n      report(file, node, sourceFile);\n    }\n    ts.forEachChild(node, visit);\n  };\n  visit(sourceFile);\n}\n\nif (violations === 0) console.log('✓ loose-equality AST gate clean');\nprocess.exit(violations > 0 ? 1 : 0);\n",
+  "red": "const result = candidate == null;\n",
+  "green": "const result = candidate !== null;\n"
+}

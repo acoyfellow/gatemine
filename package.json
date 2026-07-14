@@ -1,0 +1,23 @@
+{
+  "name": "gatemine",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Turn repeated mechanical corrections into deterministic AST gates with red/green proof.",
+  "type": "module",
+  "bin": {
+    "gatemine": "./bin/gatemine.mjs"
+  },
+  "scripts": {
+    "check": "biome check .",
+    "gatemine": "bun bin/gatemine.mjs",
+    "test": "bun test",
+    "verify": "bun run check && bun test"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "typescript": "5.7.3"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.3.4"
+  }
+}

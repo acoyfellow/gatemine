@@ -1,0 +1,64 @@
+# Boundary test receipt
+Observed: 2026-07-14
+Working directory: /Users/jcoeyman/cloudflare/gatemine
+
+$ bun test
+bun test v1.3.12 (700fc117)
+
+test/boundary.test.mjs:
+(pass) gatemine check boundary fixtures > reports both loose-equality violations deep in a 2,401-line TypeScript file [382.46ms]
+(pass) gatemine check boundary fixtures > explicitly rejects TSX input instead of crashing [186.83ms]
+50 |     const compiler = run(typescript, ['--noEmit', '--pretty', 'false', input]);
+51 |     const result = check(input);
+52 | 
+53 |     expect(compiler.exitCode).not.toBe(0);
+54 |     expect(compiler.stdout + compiler.stderr).toContain('TS1109');
+55 |     expect(result.exitCode).not.toBe(0);
+                                     ^
+error: expect(received).not.toBe(expected)
+
+Expected: not 0
+
+      at <anonymous> (/Users/jcoeyman/cloudflare/gatemine/test/boundary.test.mjs:55:33)
+(fail) gatemine check boundary fixtures > fails loudly rather than silently accepting syntactically invalid TypeScript [396.72ms]
+(pass) gatemine check boundary fixtures > accepts an empty TypeScript file cleanly [254.50ms]
+
+test/gatemine.test.mjs:
+(pass) gatemine CLI > generates a gate, then check fires red and cleans green [987.61ms]
+(pass) gatemine CLI > rejects a gate that does not fire on its own red fixture [579.76ms]
+
+ 5 pass
+ 1 fail
+ 21 expect() calls
+Ran 6 tests across 2 files. [2.80s]
+
+[bun test exit=1]
+
+$ bun bin/gatemine.mjs check test/fixtures/boundary/large-valid.ts
+✗ forbid-loose-equality  test/fixtures/boundary/large-valid.ts:1051:37
+    use === or !== instead of loose equality: generatedValue1049 == 1049
+✗ forbid-loose-equality  test/fixtures/boundary/large-valid.ts:2151:37
+    use === or !== instead of loose equality: generatedValue2149 != 2149
+[exit=1]
+
+$ bun bin/gatemine.mjs check test/fixtures/boundary/tsx-violation.tsx
+usage: gatemine check [--gates-dir <dir>] <file.ts ...>
+error: check accepts .ts files only
+[exit=2]
+
+$ bun bin/gatemine.mjs check test/fixtures/boundary/syntax-error.ts
+✓ AST gate clean
+✓ 1 AST gate(s) clean
+[exit=0]
+
+$ bun bin/gatemine.mjs check test/fixtures/boundary/empty.ts
+✓ AST gate clean
+✓ 1 AST gate(s) clean
+[exit=0]
+
+$ ./node_modules/.bin/tsc --noEmit --pretty false test/fixtures/boundary/syntax-error.ts
+test/fixtures/boundary/syntax-error.ts(1,28): error TS1109: Expression expected.
+[exit=2]
+
+$ ./node_modules/.bin/tsc --noEmit --pretty false test/fixtures/boundary/large-valid.ts
+[exit=0]

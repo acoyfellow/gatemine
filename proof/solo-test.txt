@@ -1,0 +1,10 @@
+bun test v1.3.12 (700fc117)
+
+test/gatemine.test.mjs:
+(pass) gatemine CLI > generates a gate, then check fires red and cleans green [1125.50ms]
+(pass) gatemine CLI > rejects a gate that does not fire on its own red fixture [403.46ms]
+
+ 2 pass
+ 0 fail
+ 9 expect() calls
+Ran 2 tests across 1 file. [1.54s]

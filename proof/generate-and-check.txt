@@ -1,0 +1,16 @@
+$ GATEMINE_MODEL=<local configured model> bun src/generate.mjs --name model-loose-equality-verified 'Forbid loose equality; require === and !==.'
+✓ generated /Users/jcoeyman/cloudflare/gatemine/gates/model-loose-equality-verified/gate.mjs
+✓ red fixture exited 1: /Users/jcoeyman/cloudflare/gatemine/gates/model-loose-equality-verified/fixtures/red.ts
+✓ green fixture exited 0: /Users/jcoeyman/cloudflare/gatemine/gates/model-loose-equality-verified/fixtures/green.ts
+
+$ bun src/check.mjs --gates-dir gates/model-loose-equality-verified gates/model-loose-equality-verified/fixtures/red.ts
+✗ forbid-loose-equality  gates/model-loose-equality-verified/fixtures/red.ts:3:5
+    use === or !== instead of loose equality: measuredDiameter == null
+✗ forbid-loose-equality  gates/model-loose-equality-verified/fixtures/red.ts:7:19
+    use === or !== instead of loose equality: measuredDiameter != 10
+# exit 1
+
+$ bun src/check.mjs --gates-dir gates/model-loose-equality-verified gates/model-loose-equality-verified/fixtures/green.ts
+✓ AST gate clean
+✓ 1 AST gate(s) clean
+# exit 0

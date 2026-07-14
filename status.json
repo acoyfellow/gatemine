@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "state": "extracted",
+  "northStar": "Turn repeated mechanical corrections into deterministic AST gates with red/green proof.",
+  "falsifiable": "A generated gate is retained only when its own red fixture exits 1 and green fixture exits 0.",
+  "proven": [
+    {
+      "claim": "The L9 self-verification path rejects a generated gate that exits 0 on its red fixture and leaves no gate artifact behind.",
+      "receipt": "proof/l9-negative-test.md",
+      "verifiedAt": "2026-07-13"
+    },
+    {
+      "claim": "The configured pi model path generated a new loose-equality AST gate whose own red fixture exited 1 and green fixture exited 0.",
+      "receipt": "proof/generate-and-check.md",
+      "verifiedAt": "2026-07-13"
+    },
+    {
+      "claim": "The check command forwards AST-gate file:line evidence, exits 1 for a violation, and exits 0 for a clean fixture.",
+      "receipt": "proof/generate-and-check.md",
+      "verifiedAt": "2026-07-13"
+    }
+  ],
+  "unproven": [
+    {
+      "claim": "Generated gates reduce recurring review effort across a production codebase.",
+      "reason": "No downstream adoption or time-saved receipt exists yet."
+    }
+  ],
+  "disproven": [],
+  "openQuestions": ["Which correction classes produce the highest-value gates after repeated use?"]
+}
